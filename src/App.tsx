@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { ListHeader, ListItem } from './components';
 
 export interface Task {
-  date: string;
-  id: string;
-  progress: number;
+  date: string | Date;
+  id?: string;
+  progress: string;
   title: string;
   user_email: string;
 }
