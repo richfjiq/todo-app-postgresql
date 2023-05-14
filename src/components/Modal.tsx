@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEvent, MouseEvent, useState } from 'react';
+import { ChangeEvent, FC, MouseEvent, useState } from 'react';
 
 import { Task } from '../App';
 
@@ -24,7 +24,7 @@ export const Modal: FC<Props> = ({ mode, setShowModal, task, getData }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8000/todos', {
+      const response = await fetch(`${import.meta.env.VITE_APP_SERVER_URL}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -43,11 +43,14 @@ export const Modal: FC<Props> = ({ mode, setShowModal, task, getData }) => {
   const editData = async (e: MouseEvent<HTMLInputElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8000/todos/${task?.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_SERVER_URL}/${task?.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.status === 200) {
         console.log('Worked');
