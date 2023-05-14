@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEvent, useState } from 'react';
+import { ChangeEvent, FC, FormEvent, MouseEvent, useState } from 'react';
 
 import { Task } from '../App';
 
@@ -15,10 +15,12 @@ export const Modal: FC<Props> = ({ mode, setShowModal, task, getData }) => {
     user_email: editMode && task ? task.user_email : 'richard@test.com',
     title: editMode && task ? task?.title : '',
     progress: editMode && task ? task.progress : '50',
-    date: editMode ? '' : new Date(),
+    date: editMode ? task?.date ?? '' : new Date(),
   });
 
-  const postData = async (e: FormEvent<HTMLFormElement>) => {
+  console.log({ editMode });
+
+  const postData = async (e: MouseEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     try {
@@ -27,18 +29,35 @@ export const Modal: FC<Props> = ({ mode, setShowModal, task, getData }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      console.log({ response });
+
       if (response.status === 200) {
         console.log('Worked');
         setShowModal(false);
+        getData();
       }
-      getData();
     } catch (error) {
       console.error(error);
     }
   };
 
-  // const editData
+  const editData = async (e: MouseEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:8000/todos/${task?.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status === 200) {
+        console.log('Worked');
+        setShowModal(false);
+        getData();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,7 +75,7 @@ export const Modal: FC<Props> = ({ mode, setShowModal, task, getData }) => {
           <h3>Let's {mode} your task</h3>
           <button onClick={() => setShowModal(false)}>X</button>
         </div>
-        <form onSubmit={(e) => postData(e)}>
+        <form>
           <input
             type="text"
             required
@@ -82,7 +101,7 @@ export const Modal: FC<Props> = ({ mode, setShowModal, task, getData }) => {
           <input
             className={mode}
             type="Submit"
-            onClick={editMode ? () => console.log('first') : postData}
+            onClick={editMode ? editData : postData}
           />
         </form>
       </div>
