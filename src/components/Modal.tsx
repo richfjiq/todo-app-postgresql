@@ -1,22 +1,44 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, FormEvent, useState } from 'react';
 
 import { Task } from '../App';
 
 interface Props {
   mode: string;
   setShowModal: (value: React.SetStateAction<boolean>) => void;
+  task?: Task;
+  getData: () => Promise<void>;
 }
 
-export const Modal: FC<Props> = ({ mode, setShowModal }) => {
+export const Modal: FC<Props> = ({ mode, setShowModal, task, getData }) => {
   const editMode = mode !== 'create' ? true : false;
   const [data, setData] = useState<Task>({
-    user_email: '',
-    title: '',
-    progress: '',
+    user_email: editMode && task ? task.user_email : 'richard@test.com',
+    title: editMode && task ? task?.title : '',
+    progress: editMode && task ? task.progress : '50',
     date: editMode ? '' : new Date(),
   });
 
-  console.log(new Date());
+  const postData = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:8000/todos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      console.log({ response });
+      if (response.status === 200) {
+        console.log('Worked');
+        setShowModal(false);
+      }
+      getData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // const editData
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,7 +56,7 @@ export const Modal: FC<Props> = ({ mode, setShowModal }) => {
           <h3>Let's {mode} your task</h3>
           <button onClick={() => setShowModal(false)}>X</button>
         </div>
-        <form>
+        <form onSubmit={(e) => postData(e)}>
           <input
             type="text"
             required
@@ -57,7 +79,11 @@ export const Modal: FC<Props> = ({ mode, setShowModal }) => {
             onChange={handleChange}
           />
           <br />
-          <input className={mode} type="submit" />
+          <input
+            className={mode}
+            type="Submit"
+            onClick={editMode ? () => console.log('first') : postData}
+          />
         </form>
       </div>
     </div>

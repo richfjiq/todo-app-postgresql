@@ -3,9 +3,10 @@ import { Modal } from './';
 
 interface Props {
   listName: string;
+  getData: () => Promise<void>;
 }
 
-export const ListHeader: FC<Props> = ({ listName }) => {
+export const ListHeader: FC<Props> = ({ listName, getData }) => {
   const [showModal, setShowModal] = useState(false);
 
   const signOut = () => {
@@ -22,7 +23,9 @@ export const ListHeader: FC<Props> = ({ listName }) => {
           SIGN OUT
         </button>
       </div>
-      {showModal && <Modal mode="create" setShowModal={setShowModal} />}
+      {showModal && (
+        <Modal mode="create" setShowModal={setShowModal} getData={getData} />
+      )}
     </div>
   );
 };

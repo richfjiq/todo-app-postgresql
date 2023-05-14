@@ -1,24 +1,37 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { Task } from '../App';
-import { ProgressBar, TickIcon } from './';
+import { Modal, ProgressBar, TickIcon } from './';
 
 interface Props {
   task: Task;
+  getData: () => Promise<void>;
 }
 
-export const ListItem: FC<Props> = ({ task }) => {
+export const ListItem: FC<Props> = ({ task, getData }) => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
-    <div className="list_item">
+    <li className="list_item">
       <div className="info_container">
         <TickIcon />
         <p className="task_title">{task.title}</p>
-        <ProgressBar />
+        {/* <ProgressBar /> */}
       </div>
       <div className="button_container">
-        <button className="edit">EDIT</button>
+        <button className="edit" onClick={() => setShowModal(true)}>
+          EDIT
+        </button>
         <button className="delete">DELETE</button>
       </div>
-    </div>
+      {showModal && (
+        <Modal
+          mode="edit"
+          setShowModal={setShowModal}
+          task={task}
+          getData={getData}
+        />
+      )}
+    </li>
   );
 };
