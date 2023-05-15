@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
-import { ListHeader, ListItem } from './components';
+import { Auth, ListHeader, ListItem } from './components';
 
 export interface Task {
   date: string | Date;
@@ -11,10 +12,10 @@ export interface Task {
 }
 
 const App = () => {
-  const userEmail = 'richard@test.com';
+  const [cookies, setCookie, removeCookie] = useCookies(['Email', 'AuthToken']);
   const [tasks, setTasks] = useState<Task[]>();
-
-  console.log({ tasks });
+  const userEmail = cookies.Email;
+  const authToken = cookies.AuthToken;
 
   const getData = async () => {
     try {
@@ -27,8 +28,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (authToken) {
+      getData();
+    }
+  }, [authToken]);
 
   const sortedTasks = tasks?.sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
@@ -36,10 +39,16 @@ const App = () => {
 
   return (
     <div className="app">
-      <ListHeader listName={'Holiday tick list'} getData={getData} />
-      {sortedTasks?.map((task) => (
-        <ListItem key={task.id} task={task} getData={getData} />
-      ))}
+      {authToken ? (
+        <>
+          <ListHeader listName={'Holiday tick list'} getData={getData} />
+          {sortedTasks?.map((task) => (
+            <ListItem key={task.id} task={task} getData={getData} />
+          ))}
+        </>
+      ) : (
+        <Auth />
+      )}
     </div>
   );
 };

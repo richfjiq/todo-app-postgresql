@@ -180,3 +180,35 @@ input {
 .modal label {
   font-size: 13px;
 }
+
+/* Auth */
+.auth_container {
+  display: flex;
+  justify-content: center;
+  margin: 5px;
+}
+
+.auth_container_box {
+  width: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 6px 24px 0, rgba(0, 0, 0, 0.08) 0 0 0 1px;
+}
+
+.auth_container_box form {
+  display: flex;
+  flex-direction: column;
+  height: 350px;
+  padding: 20px;
+}
+
+.auth_options {
+  display: flex;
+}
+
+.auth_options button {
+  width: 50%;
+  border: none;
+  padding: 10px;
+  color: rgb(35, 38, 47);
+}
