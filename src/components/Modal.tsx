@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, MouseEvent, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
 import { Task } from '../App';
-import { useCookies } from 'react-cookie';
 
 interface Props {
   mode: string;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const Modal: FC<Props> = ({ mode, setShowModal, task, getData }) => {
-  const [cookies, setCookie, removeCookie] = useCookies(['Email', 'AuthToken']);
+  const [cookies] = useCookies(['Email', 'AuthToken']);
   const editMode = mode !== 'create' ? true : false;
   const [data, setData] = useState<Task>({
     user_email: editMode && task ? task.user_email : cookies.Email,

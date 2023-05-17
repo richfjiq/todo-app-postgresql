@@ -16,7 +16,7 @@ type AuthResponse = {
 };
 
 export const Auth = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['Email', 'AuthToken']);
+  const [, setCookie] = useCookies(['Email', 'AuthToken']);
   const [isLogin, setIsLogin] = useState(true);
   const { email, password, confirmPassword, handleChange } = useForm<FormData>({
     email: '',
@@ -24,7 +24,6 @@ export const Auth = () => {
     confirmPassword: '',
   });
   const [error, setError] = useState('');
-  console.log(cookies);
 
   const viewLogin = (status: boolean) => {
     setError('');
@@ -50,8 +49,10 @@ export const Auth = () => {
         body: JSON.stringify({ email, password }),
       }
     );
+
     const data: AuthResponse = await response.json();
-    if (response.status === 403) {
+
+    if (response.status === 403 || response.status === 404) {
       setError(data.message ?? '');
       return;
     }

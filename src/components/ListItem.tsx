@@ -37,7 +37,7 @@ export const ListItem: FC<Props> = ({ task, getData }) => {
       <div className="info_container">
         <TickIcon />
         <p className="task_title">{task.title}</p>
-        <ProgressBar />
+        <ProgressBar progress={task.progress} />
       </div>
       <div className="button_container">
         <button className="edit" onClick={() => setShowModal(true)}>

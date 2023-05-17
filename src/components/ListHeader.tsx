@@ -1,4 +1,6 @@
 import { FC, useState } from 'react';
+import { useCookies } from 'react-cookie';
+
 import { Modal } from './';
 
 interface Props {
@@ -7,10 +9,13 @@ interface Props {
 }
 
 export const ListHeader: FC<Props> = ({ listName, getData }) => {
+  const [, , removeCookie] = useCookies(['Email', 'AuthToken']);
   const [showModal, setShowModal] = useState(false);
 
   const signOut = () => {
-    console.log('signout');
+    removeCookie('Email');
+    removeCookie('AuthToken');
+    window.location.reload();
   };
   return (
     <div className="list_header">
