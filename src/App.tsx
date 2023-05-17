@@ -12,7 +12,7 @@ export interface Task {
 }
 
 const App = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(['Email', 'AuthToken']);
+  const [cookies] = useCookies(['Email', 'AuthToken']);
   const [tasks, setTasks] = useState<Task[]>();
   const userEmail = cookies.Email;
   const authToken = cookies.AuthToken;
@@ -31,6 +31,7 @@ const App = () => {
     if (authToken) {
       getData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
 
   const sortedTasks = tasks?.sort(
@@ -42,6 +43,7 @@ const App = () => {
       {authToken ? (
         <>
           <ListHeader listName={'Holiday tick list'} getData={getData} />
+          <p className="user_email">Welcome back {userEmail}</p>
           {sortedTasks?.map((task) => (
             <ListItem key={task.id} task={task} getData={getData} />
           ))}
